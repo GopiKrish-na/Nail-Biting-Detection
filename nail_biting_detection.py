@@ -3,15 +3,15 @@ import mediapipe as mp
 import numpy as np
 import pyttsx3
 
-# Initialize MediaPipe face and hand detection models
+# Initializing MediaPipe face and hand detection models
 mp_face_detection = mp.solutions.face_detection
 mp_hands = mp.solutions.hands
 mp_drawing = mp.solutions.drawing_utils
 
-# Initialize the text-to-speech engine
+# Initializing the text-to-speech engine
 engine = pyttsx3.init()
 
-# Start the video capture
+# Starting the video capture
 cap = cv2.VideoCapture(0)
 
 # Function to play the warning message
@@ -31,7 +31,7 @@ with mp_face_detection.FaceDetection(min_detection_confidence=0.2) as face_detec
         # Flipping the image horizontally for a later selfie-view display
         image = cv2.flip(image, 1)
         
-        # Convert the BGR (Blue Green and Red) image to RGB
+        # Converting the BGR (Blue Green and Red) image to RGB
         image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         
         # Processing the image to find face
@@ -40,7 +40,7 @@ with mp_face_detection.FaceDetection(min_detection_confidence=0.2) as face_detec
         # Processing the image to find hands
         hand_results = hands.process(image_rgb)
         
-        # Draw face and hand annotations on the image
+        # face and hand annotations on the image
         if face_results.detections:
             for detection in face_results.detections:
                 mp_drawing.draw_detection(image, detection)
@@ -52,7 +52,7 @@ with mp_face_detection.FaceDetection(min_detection_confidence=0.2) as face_detec
             for hand_landmarks in hand_results.multi_hand_landmarks:
                 mp_drawing.draw_landmarks(image, hand_landmarks, mp_hands.HAND_CONNECTIONS)
                 
-                # List of fingertips to check
+                # fingertips to checks
                 fingertip_landmarks = [
                     mp_hands.HandLandmark.THUMB_TIP,
                     mp_hands.HandLandmark.INDEX_FINGER_TIP,
@@ -69,7 +69,7 @@ with mp_face_detection.FaceDetection(min_detection_confidence=0.2) as face_detec
                     # Check if the finger tip is close to the face center
                     if face_results.detections:
                         distance = np.sqrt((finger_tip_x - face_cx) ** 2 + (finger_tip_y - face_cy) ** 2)
-                        if distance < 50:  # You may need to adjust this threshold
+                        if distance < 50:  # adjust this threshold
                             # print("Warning: Biting nails detected!")
                            # cv2.putText(image, "Warning: Biting nails detected!", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_AA)
                             play_warning()
